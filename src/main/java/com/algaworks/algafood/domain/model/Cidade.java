@@ -9,13 +9,11 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import java.math.BigDecimal;
-
 
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
-public class Restaurante {
+public class Cidade {
 
     @EqualsAndHashCode.Include
     @Id
@@ -25,14 +23,14 @@ public class Restaurante {
     @Column(nullable = false)
     private String nome;
 
-    @Column(name = "taxa_frete", nullable = false)
-    private BigDecimal taxaFrete;
+    @ManyToOne // Um estado para varias cidades
+    @JoinColumn(nullable = false)
+    private Estado estado;
 
-    /*
-      Muitos restaurantes possui uma cozinha
-     */
-    @ManyToOne
-    @JoinColumn
-    private Cozinha cozinha;
+
+
+
+
+
 
 }

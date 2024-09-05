@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0
+    cap_add:
+      - SYS_NICE
+    restart: always
+    environment:
+      - MYSQL_DATABASE=algafood
+      - MYSQL_ROOT_PASSWORD=Barretos@123
+      - MYSQL_USER=local@User
+      - MYSQL_PASSWORD=Barretos@1010
+    ports:
+      - '3306:3306'
+    volumes:
+      - db:/var/lib/mysql
+#      - ./db/import.sql:/docker-entrypoint-initdb.d/import.sql
+volumes:
+  db:
+    driver: local
