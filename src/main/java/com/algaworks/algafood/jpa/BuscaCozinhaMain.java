@@ -10,6 +10,7 @@ import org.springframework.context.ApplicationContext;
 import java.util.List;
 
 public class BuscaCozinhaMain {
+
     public static void main(String[] args) {
         ApplicationContext applicationContext = new SpringApplicationBuilder(AlgafoodApiApplication.class)
                 .web(WebApplicationType.NONE)
@@ -20,6 +21,5 @@ public class BuscaCozinhaMain {
         Cozinha cozinha = cozinhaRepository.buscar(1L);
 
         System.out.println(cozinha.getNome());
-
     }
 }

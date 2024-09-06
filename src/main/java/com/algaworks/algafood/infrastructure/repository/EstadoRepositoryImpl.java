@@ -20,6 +20,7 @@ public class EstadoRepositoryImpl implements EstadoRepository {
         return manager.createQuery("from Estado" , Estado.class)
                 .getResultList();
     }
+
     @Override
     public Estado buscar(Long id) {
         return manager.find(Estado.class, id);
@@ -30,6 +31,7 @@ public class EstadoRepositoryImpl implements EstadoRepository {
     public Estado salvar(Estado estado) {
         return manager.merge(estado);
     }
+
     @Transactional
     @Override
     public void remover(Estado estado) {
@@ -37,6 +39,4 @@ public class EstadoRepositoryImpl implements EstadoRepository {
         manager.remove(estado);
 
     }
-
-
 }

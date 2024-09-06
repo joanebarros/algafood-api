@@ -17,7 +17,7 @@ public class CidadeRepositoryImpl implements CidadeRepository {
 
     @Override
     public List<Cidade> listar() {
-        return manager.createQuery("from Cidade" , Cidade.class)
+        return manager.createQuery("from Cidade", Cidade.class)
                 .getResultList();
     }
 
@@ -25,6 +25,7 @@ public class CidadeRepositoryImpl implements CidadeRepository {
     public Cidade buscar(Long id) {
         return manager.find(Cidade.class, id);
     }
+
     @Transactional
     @Override
     public Cidade salvar(Cidade cidade) {

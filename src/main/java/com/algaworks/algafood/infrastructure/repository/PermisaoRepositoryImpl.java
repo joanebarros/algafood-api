@@ -30,6 +30,7 @@ public class PermisaoRepositoryImpl implements PermissaoRepository {
     public Permissao salvar(Permissao permissao) {
         return manager.merge(permissao);
     }
+
     @Transactional
     @Override
     public void remover(Permissao permissao) {
@@ -37,10 +38,5 @@ public class PermisaoRepositoryImpl implements PermissaoRepository {
         manager.remove(permissao);
 
     }
-
-
-
-
-
 
 }

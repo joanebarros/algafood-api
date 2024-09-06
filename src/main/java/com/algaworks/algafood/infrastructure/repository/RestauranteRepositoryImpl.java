@@ -40,5 +40,4 @@ public class RestauranteRepositoryImpl implements RestauranteRepository {
         manager.remove(restaurante);
     }
 
-
 }

@@ -8,6 +8,7 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ApplicationContext;
 
 public class AlteracaoCozinhaMain {
+
     public static void main(String[] args) {
         ApplicationContext applicationContext = new SpringApplicationBuilder(AlgafoodApiApplication.class)
                 .web(WebApplicationType.NONE)
@@ -20,9 +21,5 @@ public class AlteracaoCozinhaMain {
         cozinha.setNome("Brasileira");
 
         cozinhaRepository.salvar(cozinha);
-
-
-
-
     }
 }
