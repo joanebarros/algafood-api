@@ -26,5 +26,4 @@ public class ConsultaFormaPagamentoMain {
             System.out.println(formaPagamento.getDescricao());
         }
     }
-
 }
