@@ -1,6 +1,8 @@
 package com.algaworks.algafood.api.controller;
 
-import com.algaworks.algafood.api.model.CozinhasXmlWrapper;
+
+import com.algaworks.algafood.domain.exception.EntidadeEmUsoException;
+import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.model.Cozinha;
 import com.algaworks.algafood.domain.repository.CozinhaRepository;
 import com.algaworks.algafood.domain.service.CadastroCozinhaSevice;
@@ -34,10 +36,6 @@ public class CozinhaController {
     public List<Cozinha> listar() {
         return cozinhaRepository.listar();
     }
-    @GetMapping(produces = MediaType.APPLICATION_XML_VALUE)
-    public CozinhasXmlWrapper listarXml() {
-        return new CozinhasXmlWrapper(cozinhaRepository.listar());
-    }
 
     @GetMapping("/{cozinhaId}")
     public ResponseEntity<Cozinha> buscar(@PathVariable Long cozinhaId) {
@@ -66,7 +64,7 @@ public class CozinhaController {
             //cozinhaAtual.setNome(cozinhaAtual.getNome());
             BeanUtils.copyProperties(cozinha, cozinhaAtual, "id");
 
-            cozinhaRepository.salvar(cozinhaAtual);
+            cozinhaAtual = cadastroCozinha.salvar(cozinhaAtual);
 
             return ResponseEntity.ok(cozinhaAtual);
         }
@@ -77,16 +75,14 @@ public class CozinhaController {
     @DeleteMapping("/{cozinhaId}")
     public ResponseEntity<Cozinha> remover (@PathVariable Long cozinhaId) {
         try {
-            Cozinha cozinha = cozinhaRepository.buscar(cozinhaId);
 
-            if (cozinha != null) {
-                cozinhaRepository.remover(cozinha);
+            cadastroCozinha.excluir(cozinhaId);
+            return ResponseEntity.noContent().build();
 
-                return ResponseEntity.noContent().build();
-            }
-
+        } catch (EntidadeNaoEncontradaException e) {
             return ResponseEntity.notFound().build();
-        } catch (DataIntegrityViolationException e) {
+
+        } catch (EntidadeEmUsoException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
     }
