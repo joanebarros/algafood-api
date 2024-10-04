@@ -32,5 +32,4 @@ public class CadrastroEstadoService {
                     String.format("Cozinha de código %d não pode ser removida, pois está em uso"));
         }
     }
-
 }
