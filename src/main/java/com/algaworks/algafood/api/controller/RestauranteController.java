@@ -4,6 +4,7 @@ import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.model.Restaurante;
 import com.algaworks.algafood.domain.repository.RestauranteRepository;
 import com.algaworks.algafood.domain.service.CadastroRestauranteService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.el.util.ReflectionUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,26 +76,24 @@ public class RestauranteController {
                     .body(e.getMessage());
         }
     }
+
     @PatchMapping("/{restauranteId}")
     public ResponseEntity<?> atualizarParcial(@PathVariable Long restauranteId,
-                                              @RequestBody Map<String, Objects> campos) {
+                                              @RequestBody Map<String, Object> campos) {
         Restaurante restauranteAtual = restauranteRepository.buscar(restauranteId);
 
         if (restauranteAtual == null) {
             return ResponseEntity.notFound().build();
         }
-        marge(campos, restauranteAtual);
+
+        merge(campos, restauranteAtual);
 
         return atualizar(restauranteId, restauranteAtual);
     }
 
-    private void marge(Map<String, Objects> camposOrigem, Restaurante restauranteDestino) {
+    private void merge(Map<String, Object> camposOrigem, Restaurante restauranteDestino) {
         camposOrigem.forEach((nomePropriedade, valorPropriedade) -> {
-            Field field = ReflectionUtils.findField(Restaurante.class, nomePropriedade);
-
             System.out.println(nomePropriedade + " = " + valorPropriedade);
-
-            ReflectionUtils.setField(field, restauranteDestino, valorPropriedade);
         });
     }
 }
