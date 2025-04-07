@@ -1,0 +1,6 @@
+CREATE SEQUENCE cozinha_seq START WITH 1 INCREMENT BY 1;
+
+CREATE TABLE cozinha (
+  id BIGINT PRIMARY KEY DEFAULT nextval('cozinha_seq'),
+  nome VARCHAR(60) NOT NULL
+);

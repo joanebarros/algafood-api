@@ -1,0 +1,7 @@
+CREATE SEQUENCE cidade_seq START WITH 1 INCREMENT BY 1;
+
+CREATE TABLE cidade (
+  id BIGSERIAL PRIMARY KEY,
+  nome_cidade VARCHAR(80) NOT NULL,
+  nome_estado VARCHAR(80) NOT NULL
+);
