@@ -1,6 +1,7 @@
 package com.algaworks.algafood.domain.service;
 
 import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
+import com.algaworks.algafood.domain.exception.EstadoNaoEncontradoException;
 import com.algaworks.algafood.domain.model.Estado;
 import com.algaworks.algafood.domain.repository.EstadoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,10 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class CadrastroEstadoService {
+
+    private static final String MSG_ESTADO_EM_USO
+            = "Estado de código %d não pode ser removido, pois está em uso";
+
 
     @Autowired
     private EstadoRepository estadoRepository;
@@ -24,12 +29,16 @@ public class CadrastroEstadoService {
             estadoRepository.deleteById(estadoId);
 
         }catch (EmptyResultDataAccessException e) {
-            throw new EntidadeNaoEncontradaException(
-                    String.format("Não existe um cadastro de estado com código %d", estadoId));
+            throw new EstadoNaoEncontradoException(estadoId);
 
         }catch (DataIntegrityViolationException e){
-            throw new EntidadeNaoEncontradaException(
-                    String.format("Cozinha de código %d não pode ser removida, pois está em uso"));
+            throw new EstadoNaoEncontradoException(
+                    String.format(MSG_ESTADO_EM_USO, estadoId));
         }
+    }
+
+    public Estado buscarOuFalhar(Long estadoId) {
+        return estadoRepository.findById(estadoId)
+                .orElseThrow(() -> new EstadoNaoEncontradoException(estadoId));
     }
 }

@@ -1,6 +1,7 @@
 package com.algaworks.algafood.api.controller;
 
 import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
+import com.algaworks.algafood.domain.exception.NegocioException;
 import com.algaworks.algafood.domain.model.Restaurante;
 import com.algaworks.algafood.domain.repository.RestauranteRepository;
 import com.algaworks.algafood.domain.service.CadastroRestauranteService;
@@ -43,17 +44,12 @@ public class RestauranteController {
     }
 
     @GetMapping("/{restauranteId}")
-    public ResponseEntity<Restaurante> buscar(@PathVariable Long restauranteId) {
-       Optional<Restaurante> restaurante = restauranteRepository.findById(restauranteId);
-
-        if (restaurante != null) {
-            return ResponseEntity.ok(restaurante.get());
-        }
-
-        return ResponseEntity.notFound().build();
+    public Restaurante buscar(@PathVariable Long restauranteId) {
+        return cadastroRestaurante.buscarOuFalhar(restauranteId);
     }
 
-    @PostMapping
+    /*
+       @PostMapping
     @ResponseStatus(HttpStatus.ACCEPTED)
     public ResponseEntity<?> adicionar (@RequestBody Restaurante restaurante) {
 
@@ -66,42 +62,27 @@ public class RestauranteController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-    @PutMapping("/{restauranteId}")
-    public ResponseEntity<?> atualizar(@PathVariable Long restauranteId,
-                                       @RequestBody Restaurante restaurante){
+     */
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public Restaurante adicionar(@RequestBody Restaurante restaurante) {
         try {
-              Restaurante restaurateAtual = restauranteRepository
-                      .findById(restauranteId).orElse(null);
-
-              if (restaurante != null) {
-                  BeanUtils.copyProperties(restaurante, restaurateAtual,
-                          "id", "formasPagamento", "endereco", "dataCadastro", "produtos");
-
-                  restaurateAtual = cadastroRestaurante.salvar(restaurateAtual);
-                  return ResponseEntity.ok(restaurateAtual);
-              }
-
-              return ResponseEntity.notFound().build();
-
-        }catch (EntidadeNaoEncontradaException e) {
-            return ResponseEntity.badRequest()
-                    .body(e.getMessage());
+            return cadastroRestaurante.salvar(restaurante);
+        } catch (EntidadeNaoEncontradaException e) {
+            throw new NegocioException(e.getMessage());
         }
     }
 
-    @PatchMapping("/{restauranteId}")
-    public ResponseEntity<?> atualizarParcial(@PathVariable Long restauranteId,
-                                              @RequestBody Map<String, Object> campos) {
-        Restaurante restauranteAtual = restauranteRepository
-                .findById(restauranteId).orElse(null);
+    @PutMapping("/{restauranteId}")
+    public Restaurante atualizar(@PathVariable Long restauranteId,
+                                 @RequestBody Restaurante restaurante) {
+        Restaurante restauranteAtual = cadastroRestaurante.buscarOuFalhar(restauranteId);
 
-        if (restauranteAtual == null) {
-            return ResponseEntity.notFound().build();
-        }
+        BeanUtils.copyProperties(restaurante, restauranteAtual,
+                "id", "formasPagamento", "endereco", "dataCadastro", "produtos");
 
-        merge(campos, restauranteAtual);
-
-        return atualizar(restauranteId, restauranteAtual);
+        return cadastroRestaurante.salvar(restauranteAtual);
     }
 
     private void merge(Map<String, Object> dadosOrigem, Restaurante restauranteDestino) {
