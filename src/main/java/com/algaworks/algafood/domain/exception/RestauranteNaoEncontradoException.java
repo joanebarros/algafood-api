@@ -16,3 +16,4 @@ public class RestauranteNaoEncontradoException extends EntidadeNaoEncontradaExce
         this(String.format("Não existe um cadastro de restaurante com código %d", restauranteId));
     }
 }
+
