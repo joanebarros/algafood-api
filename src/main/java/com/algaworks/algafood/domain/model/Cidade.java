@@ -1,6 +1,8 @@
 package com.algaworks.algafood.domain.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -15,10 +17,12 @@ public class Cidade {
     private Long id;
 
     @Column(nullable = false)
+    @NotBlank
     private String nome;
 
     @ManyToOne // Um estado para varias cidades
     @JoinColumn(nullable = false)
+    @NotNull
     private Estado estado;
 
 }
