@@ -1,13 +1,15 @@
 package com.algaworks.algafood.domain.model;
 
+import com.algaworks.algafood.core.validation.Groups;
+import com.algaworks.algafood.core.validation.Multiplo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.groups.ConvertGroup;
+import jakarta.validation.groups.Default;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.CreationTimestamp;
@@ -30,12 +32,13 @@ public class Restaurante {
     private Long id;
 
     @Column(nullable = false)
-    //@NotBlank
-    @NotEmpty
+    @NotBlank
     private String nome;
 
+    @NotNull
+    @PositiveOrZero
+    @Multiplo(numero = 5)
     @Column(name = "taxa_frete", nullable = false)
-    @DecimalMin(value = "1")
     private BigDecimal taxaFrete;
 
     /*
@@ -45,6 +48,7 @@ public class Restaurante {
    // @JsonIgnore
     @JoinColumn(name = "cozinha_id", nullable = false)
     @Valid
+    @ConvertGroup(from = Default.class, to = Groups.CozinhaId.class)
     @NotNull
     private Cozinha cozinha;
 
