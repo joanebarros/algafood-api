@@ -16,12 +16,12 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 @Target({ METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE })
 @Retention(RUNTIME)
-@Constraint(validatedBy = { })
+@Constraint(validatedBy = { MultiploValidador.class })
 public @interface Multiplo {
 
   String message() default "múltiplo inválido";
 
-  Class<?>[] groups() default {MultiploValidador.class };
+  Class<?>[] groups() default { };
 
   Class<? extends Payload>[] payload() default { };
 

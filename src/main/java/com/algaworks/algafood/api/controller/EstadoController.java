@@ -1,5 +1,8 @@
 package com.algaworks.algafood.api.controller;
 
+import com.algaworks.algafood.api.controller.model.EstadoModel;
+import com.algaworks.algafood.assembler.EstadoInputDisassembler;
+import com.algaworks.algafood.assembler.EstadoModelAssembler;
 import com.algaworks.algafood.domain.exception.EntidadeEmUsoException;
 import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.model.Estado;
@@ -33,30 +36,36 @@ public class EstadoController {
     @Autowired
     private CadrastroEstadoService cadastroEstado;
 
+    @Autowired
+    private EstadoModelAssembler estadoModelAssembler;
+
+    @Autowired
+    private EstadoInputDisassembler estadoInputDisassembler;
+
     @GetMapping
-    public List<Estado> listar() {
-        return estadoRepository.findAll();
+    public List<EstadoModel> listar() {
+        return estadoModelAssembler.toCollectionModel(estadoRepository.findAll());
     }
     
     @GetMapping("/{estadoId}")
-    public ResponseEntity<Estado> buscar(@PathVariable Long estadoId) {
-        return ResponseEntity.ok(cadastroEstado.buscarOuFalhar(estadoId));
+    public ResponseEntity<EstadoModel> buscar(@PathVariable Long estadoId) {
+        return ResponseEntity.ok(estadoModelAssembler.toModel(cadastroEstado.buscarOuFalhar(estadoId)));
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Estado adicionar(@RequestBody @Valid Estado estado) {
-        return cadastroEstado.salvar(estado);
+    public EstadoModel adicionar(@RequestBody @Valid Estado estado) {
+        return estadoModelAssembler.toModel(cadastroEstado.salvar(estado));
     }
 
     @PutMapping("/{estadoId}")
-    public ResponseEntity<Estado> atualizar(@PathVariable Long estadoId,
+    public ResponseEntity<EstadoModel> atualizar(@PathVariable Long estadoId,
                                             @RequestBody @Valid Estado estado) {
         Estado estadoAtual = cadastroEstado.buscarOuFalhar(estadoId);
 
         BeanUtils.copyProperties(estado, estadoAtual, "id");
 
-        return ResponseEntity.ok(cadastroEstado.salvar(estadoAtual));
+        return ResponseEntity.ok(estadoModelAssembler.toModel(cadastroEstado.salvar(estadoAtual)));
     }
 
     @DeleteMapping("/{estadoId}")

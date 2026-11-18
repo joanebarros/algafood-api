@@ -1,5 +1,6 @@
 package com.algaworks.algafood.domain.service;
 
+import com.algaworks.algafood.domain.exception.EntidadeEmUsoException;
 import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.exception.EstadoNaoEncontradoException;
 import com.algaworks.algafood.domain.model.Estado;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CadrastroEstadoService {
@@ -19,10 +21,12 @@ public class CadrastroEstadoService {
     @Autowired
     private EstadoRepository estadoRepository;
 
+    @Transactional
     public Estado salvar(Estado estado) {
         return estadoRepository.save(estado);
     }
 
+    @Transactional
     public void excluir(Long estadoId) {
         try {
 
@@ -32,7 +36,7 @@ public class CadrastroEstadoService {
             throw new EstadoNaoEncontradoException(estadoId);
 
         }catch (DataIntegrityViolationException e){
-            throw new EstadoNaoEncontradoException(
+            throw new EntidadeEmUsoException(
                     String.format(MSG_ESTADO_EM_USO, estadoId));
         }
     }
